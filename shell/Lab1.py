@@ -66,7 +66,7 @@ def executeCommand(args): # This is where we get to execute the command
             pass
 
     # The command was not found and prints an error message
-    os.write(2, ("%s: command not found\n" % args[0]).encode())
+    os.write(2, ("%s: command not found\n" % args[0]).encode())  
     sys.exit(0)
 
 
