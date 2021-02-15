@@ -4,7 +4,7 @@ import os, sys, re
 
 def main():
     
-    while True: # This is trying to replicate what a shell actually does 
+    while True: # This is trying to replicate what a shell actually does, but the main reason why we use a while is because we get to keep going and write other commands
         
         if 'PS1' in os.environ:
             os.write(1, (os.environ['PS1']).encode())
@@ -26,20 +26,20 @@ def main():
             
 def inputHandler(args):
   
-    if len(args) == 0: # Nothing really happens here, return to main
+    if len(args) == 0: # Nothing really happens here so then it would return to main
         return
         
-    if "exit" in args: 
+    if "exit" in args: # So if I was to write exit, then the program would end
         sys.exit(0)
 
-    # This is the change directory
+    # This is the change directory when used "cd"
     elif "cd" == args[0]:
         try:
-            if len(args)==1: # If cd is specified, reprompt the user
+            if len(args)==1: # If cd is specified then it would reprompt the user
                 return   
             else:
                 os.chdir(args[1])
-        except: # Does not existent
+        except: # If the directory does not existent
             os.write(1, ("cd %s: No such file or directory\n" % args[1]).encode())
     else:
         rc = os.fork()
@@ -52,14 +52,14 @@ def inputHandler(args):
             sys.exit(0)
 
 def executeCommand(args):
-    for dir in re.split(":", os.environ['PATH']):
+    for dir in re.split(":", os.environ['PATH']): # The path
         program = "%s/%s" % (dir, args[0])
         try:
-            os.execve(program, args, os.environ) # try to exec program
+            os.execve(program, args, os.environ) # This is where we execute the program
         except FileNotFoundError:
             pass
         
-    os.write(2, ("%s: command not found\n" % args[0]).encode()) # There is command not found, print an error message
+    os.write(2, ("%s: command not found\n" % args[0]).encode()) # If the command not found then we would print an error message
     sys.exit(0)
 
 if '__main__' == __name__:
