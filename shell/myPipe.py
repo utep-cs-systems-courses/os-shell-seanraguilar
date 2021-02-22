@@ -13,7 +13,7 @@ def pipe(args):
         sys.exit(1)
     elif rc == 0: # We will execute the left arg here
         if "<" in leftArg:
-            redirect(LeftArg)         
+            redirect(leftArg)         
         if ">" in leftArg:
             redirect(leftArg)
             
