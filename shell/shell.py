@@ -3,6 +3,7 @@
 import os, sys, re
 from myReadLine import readLine
 from myRedirect import redirect
+#from myPipe.py import myPipe
 
 def main():
     '''This is trying to replicate what a shell actually does, but the main reason why we use a while is because we get to keep going and write other commands'''
