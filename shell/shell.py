@@ -2,15 +2,18 @@
 
 import os, sys, re
 from myReadLine import readLine
+from myRedirect import redirect
 
 def main():
-    while True: # This is trying to replicate what a shell actually does, but the main reason why we use a while is because we get to keep going and write other commands
+    '''This is trying to replicate what a shell actually does, but the main reason why we use a while is because we get to keep going and write other commands'''
+    while True:
         if 'PS1' in os.environ:
             os.write(1, (os.environ['PS1']).encode())
         else:
             os.write(1, ("$ ").encode())
             
         args = readLine() # We are using the readLine() found in the myReadLine.py
+        #args = read(0, 1024)
         
         if len(args) == 0:
             break # This exits while loop
@@ -45,10 +48,17 @@ def inputHandler(args):
         if rc < 0:
             os.write(2, ("fork failed, returning %d\n" % rc).encode())
             sys.exit(1)
+        
         elif rc == 0:
+            if ">" in args: # Check for redirect
+                redirect(args)
+            if "<" in args:
+                redirect(args)
+            
+            # These are meant for checking with direction inside the input
             executeCommand(args)
             sys.exit(0)
-
+            
 def executeCommand(args):
     for dir in re.split(":", os.environ['PATH']): # The path, takes in the path (checker)
         program = "%s/%s" % (dir, args[0])
