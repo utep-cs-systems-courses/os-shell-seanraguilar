@@ -1,7 +1,7 @@
 import os, sys, write
 from myRedirect import redirect
 
-def pipe(args):
+def piping(args):
     args = args.split('|')
     leftArg = args[0].split()
     rightArg = args[1].split()
