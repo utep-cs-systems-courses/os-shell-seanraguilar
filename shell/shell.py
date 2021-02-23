@@ -3,7 +3,7 @@
 import os, sys, re
 from myReadLine import readLine
 from myRedirect import redirect
-from myPipe.py import piping
+#from myPipe.py import piping
 
 def main():
     '''This is trying to replicate what a shell actually does, but the main reason why we use a while is because we get to keep going and write other commands'''
@@ -16,9 +16,9 @@ def main():
         args = readLine() # We are using the readLine() found in the myReadLine.py
         #args = read(0, 1024)
         
-         if '|' in args: # Check for pipe occurs so that we can split using piping()
-            piping(args)
-            continue
+         #if '|' in args: # Check for pipe occurs so that we can split using piping()
+         #   piping(args)
+         #   continue
         
         if len(args) == 0:
             break # This exits while loop
