@@ -1,18 +1,19 @@
 import os, sys, re
 
-'''This function will check the direction (< or >) if it's 
-   the input or output, then will return and pass the loop '''
+'''This function will check the direction (< or >) if it's the input or output, 
+   then will return and pass the loop '''
 def redirect(args):
-    if ">" in args:
+    if '>' in args:
         os.close(1) # Close fd1
-        os.open(args[args.index('>')+1], os.O_CREAT | os.O_WRONLY)# Create the file if there isnt one or wrtie to file
-        os.set_inheritable(1,True)# Take fd0 and makes sure it is inheritable
+        os.open(args[args.index('>')+1], os.O_CREAT | os.O_WRONLY)# This creates file if there isnt one or wrtie to file
+        os.set_inheritable(1,True)# This takes fd(0) and makes sure it is inheritable
         args.remove(args[args.index('>')+1])
         args.remove('>')
-    elif "<" in args:
-        os.close(0) # Closes the file descriptor (0) attached to standard input of keyboard
+        
+    elif '<' in args: 
+        os.close(0) # This closes file descriptor 0 attached to standard input of keyboard
         os.open(args[args.index('<')+1], os.O_RDONLY) # Write only
-        os.set_inheritable(0, True) # fd(0) is attached to kbd
+        os.set_inheritable(0, True) # This is fd(0) which is attached to kbd
         args.remove(args[args.index('<') + 1])
         args.remove('<')
     
@@ -25,9 +26,3 @@ def redirect(args):
     
     os.write(2, ("%s command not found\n" % args[0]).encode()) # Writing the error message to display
     sys.exit(0)
-
-def main():
-    redirect()
-    
-if '__main__' == __name__:
-    main() 
