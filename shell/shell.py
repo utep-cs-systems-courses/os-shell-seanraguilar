@@ -58,51 +58,52 @@ def inputHandler(args):
             sys.exit(0)
             
 def executeCommand(args):
-    if '|' in args: #check for pipe here so we can split in pipe()
+    if '|' in args: # This will check for pipe here so we can split in pipe()
             pipeInput(args)
             
     elif "/" in args[0]:
-        program=args[0]
+        program = args[0]
         try:
-            os.execve(program,args,os.environ)#execute a process with enviornment
+            os.execve(program,args,os.environ)# This will execute a process with enviornment
         except FileNotFoundError:
             pass
-    elif ">" in args or "<" in args: #check for redirection
+    elif ">" in args or "<" in args: # This will check for redirection
         redirect(args)
+        
     else:
-        for dir in re.split(":", os.environ['PATH']):#breaks the path apart by pattern of : in the environment variable path
+        for dir in re.split(":", os.environ['PATH']):# This breaks the path apart by pattern of : in the environment variable path
             program = "%s/%s" % (dir, args[0])
             try:
-                os.execve(program, args, os.environ)#tries to execute with given the parameters of program as path, args as arguments and os.environ as environment
+                os.execve(program, args, os.environ)# This tries to execute with given the parameters of program as path, args as arguments and os.environ as environment
             except FileNotFoundError:
                 pass
-    os.write(2, ("%s: command not found\n" % args[0]).encode())#error code 
+    os.write(2, ("%s: command not found\n" % args[0]).encode()) # error code 
     sys.exit(0)
 
-def pipeInput(args):#the pipes method thats output of one program as input of another
-    left=args[0:args.index("|")]# gets data of left side of arguments before |
-    right=args[args.index("|")+1:]#gets the data of right side of arguments after |
-    pRead, pWrite = os.pipe()#read and write 
-    rc=os.fork()#creates a child 
+def pipeInput(args): # The pipes method thats output of one program as input of another
+    left=args[0:args.index("|")] # This gets data of left side of arguments before |
+    right=args[args.index("|")+1:] # This gets the data of right side of arguments after |
+    pRead, pWrite = os.pipe() # This will read and write 
+    rc=os.fork() # This creates a child 
     if rc<0:
         os.write(2, ("Fork has failed returning now %d\n" %rc).encode())#
         sys.exit(1)
-    elif rc==0:#if return value is 0 do the following
-        os.close(1)#close file descriptor 1
+    elif rc==0: #if return value is 0 do the following
+        os.close(1)# This will close file descriptor 1
         os.dup(pWrite)#copies the file descriptors of the child into pWrite
         os.set_inheritable(1,True)#
         for fd in (pRead,pWrite):
-            os.close(fd)#closes all the file descriptors
-        executeCommand(left)#inputs the left argument to executeCommands
+            os.close(fd) # This closes all the file descriptors
+        executeCommand(left) # inputs the left argument to executeCommands
     else:
-        os.close(0)#closes file descriptor 0
-        os.dup(pRead)#copies the files descriptor of the parent and puts it into pRead
-        os.set_inheritable(0,True)#
+        os.close(0) # This closes file descriptor 0
+        os.dup(pRead) # This copies the files descriptor of the parent and puts it into pRead
+        os.set_inheritable(0,True)
         for fd in (pWrite, pRead):
-            os.close(fd)#closes file descriptors in both pRead,pWrite
-        if "|" in right:#if it finds '|' on the right side of argument then it's piping it with right's varaibles
-            pipe(right)#goes into pipe with variable right
-        executeCommand(right)#inputs the right argument into commands
+            os.close(fd) # This closes file descriptors in both pRead,pWrite
+        if "|" in right: # if it finds '|' on the right side of argument then it's piping it with right's varaibles
+            pipe(right) # This goes into pipe with variable right
+        executeCommand(right) # The inputs the right argument into commands
 
 if '__main__' == __name__:
     main() 
